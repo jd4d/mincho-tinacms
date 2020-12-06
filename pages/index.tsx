@@ -1,8 +1,9 @@
 import { getGithubPreviewProps, parseJson } from 'next-tinacms-github'
 import { useGithubJsonForm } from 'react-tinacms-github'
-import { useForm, usePlugin } from 'tinacms'
+import { useCMS, useForm, usePlugin } from 'tinacms'
 import { GetStaticProps } from 'next'
 import { InlineForm, InlineText, InlineImage } from 'react-tinacms-inline'
+import styled from 'styled-components'
 
 export default function Home(props) {
   console.log(props)
@@ -15,12 +16,13 @@ export default function Home(props) {
   }
   const [formDatag, form] = useGithubJsonForm(props.file, formOptions)
   usePlugin(form)
+  const cms = useCMS()
 
   return (
     <div className="container">
       <InlineForm form={form}>
         <h1>
-          <InlineText name="title" />
+          <StyledText name="title" />
         </h1>
         <InlineImage
           name="hero_image"
@@ -47,6 +49,9 @@ export default function Home(props) {
     </div>
   )
 }
+const StyledText = styled(InlineText)`
+  color: green;
+`
 
 export const getStaticProps: GetStaticProps = async function ({
   preview,
