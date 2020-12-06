@@ -2,6 +2,8 @@ import App from 'next/app'
 import { TinaCMS, TinaProvider } from 'tinacms'
 import { GithubClient, TinacmsGithubProvider } from 'react-tinacms-github'
 import { NextGithubMediaStore } from 'next-tinacms-github'
+import React from 'react'
+import Head from 'next/head'
 
 export default class Site extends App {
   cms: TinaCMS
@@ -52,9 +54,10 @@ export default class Site extends App {
           onLogout={onLogout}
           error={pageProps.error}
         >
-          {/**
-           * 6. Add a button for entering Preview/Edit Mode
-           */}
+          <Head>
+            <title>Mincho Pacheco</title>
+            <link rel="icon" href="/favicon.ico" />
+          </Head>
           <EditLink cms={this.cms} />
           <Component {...pageProps} />
         </TinacmsGithubProvider>
