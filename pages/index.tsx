@@ -65,16 +65,20 @@ export const getStaticProps: GetStaticProps = async function ({
   if (preview) {
     return {
       props: {
-        homeFile: await getGithubPreviewProps({
-          ...previewData,
-          fileRelativePath: 'content/home.json',
-          parse: parseJson,
-        }),
-        globalsFile: await getGithubPreviewProps({
-          ...previewData,
-          fileRelativePath: 'content/globals.json',
-          parse: parseJson,
-        }),
+        homeFile: (
+          await getGithubPreviewProps({
+            ...previewData,
+            fileRelativePath: 'content/home.json',
+            parse: parseJson,
+          })
+        ).props,
+        globalsFile: (
+          await getGithubPreviewProps({
+            ...previewData,
+            fileRelativePath: 'content/globals.json',
+            parse: parseJson,
+          })
+        ).props,
       },
     }
   }
