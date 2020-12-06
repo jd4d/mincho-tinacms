@@ -1,6 +1,6 @@
 import { getGithubPreviewProps, parseJson } from 'next-tinacms-github'
 import { useGithubJsonForm } from 'react-tinacms-github'
-import { usePlugin, useScreenPlugin } from 'tinacms'
+import { usePlugin, useFormScreenPlugin } from 'tinacms'
 import { GetStaticProps } from 'next'
 import { InlineForm, InlineText, InlineImage } from 'react-tinacms-inline'
 
@@ -17,14 +17,14 @@ export default function Home(props) {
     label: 'Page Globals',
     fields: [{ name: 'background-color', component: 'text' }],
   }
-  const [formData, form] = useGithubJsonForm(props.homeFile.file, formOptions)
+  const [formData, form] = useGithubJsonForm(props.file, formOptions)
   usePlugin(form)
 
   const [globals, globalsForm] = useGithubJsonForm(
-    props.globalsFile.file,
+    props.file,
     globalFormOptions
   )
-  useScreenPlugin(globalsForm)
+  useFormScreenPlugin(globalsForm)
 
   return (
     <div style={{ backgroundColor: globals['background-color'] }}>
@@ -63,44 +63,20 @@ export const getStaticProps: GetStaticProps = async function ({
   previewData,
 }) {
   if (preview) {
-    return {
-      props: {
-        homeFile: (
-          await getGithubPreviewProps({
-            ...previewData,
-            fileRelativePath: 'content/home.json',
-            parse: parseJson,
-          })
-        ).props,
-        globalsFile: (
-          await getGithubPreviewProps({
-            ...previewData,
-            fileRelativePath: 'content/globals.json',
-            parse: parseJson,
-          })
-        ).props,
-      },
-    }
+    return getGithubPreviewProps({
+      ...previewData,
+      fileRelativePath: 'content/globals.json',
+      parse: parseJson,
+    })
   }
   return {
     props: {
-      homeFile: {
-        sourceProvider: null,
-        error: null,
-        preview: false,
-        file: {
-          fileRelativePath: 'content/home.json',
-          data: (await import('../content/home.json')).default,
-        },
-      },
-      contentFile: {
-        sourceProvider: null,
-        error: null,
-        preview: false,
-        file: {
-          fileRelativePath: 'content/globals.json',
-          data: (await import('../content/globals.json')).default,
-        },
+      sourceProvider: null,
+      error: null,
+      preview: false,
+      file: {
+        fileRelativePath: 'content/globals.json',
+        data: (await import('../content/globals.json')).default,
       },
     },
   }
