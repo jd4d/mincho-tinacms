@@ -1,11 +1,15 @@
-import { getGithubPreviewProps, parseJson } from 'next-tinacms-github'
+import {
+  getGithubFile,
+  GetGithubFileOptions,
+  getGithubPreviewProps,
+  parseJson,
+} from 'next-tinacms-github'
 import { useGithubJsonForm } from 'react-tinacms-github'
 import { usePlugin, useFormScreenPlugin } from 'tinacms'
 import { GetStaticProps } from 'next'
 import { InlineForm, InlineText, InlineImage } from 'react-tinacms-inline'
 
 export default function Home(props) {
-  console.log(props)
   const formOptions = {
     label: 'Home Page',
     fields: [
@@ -22,11 +26,11 @@ export default function Home(props) {
     label: 'Page Globals',
     fields: [{ name: 'background-color', component: 'text' }],
   }
-  const [formData, form] = useGithubJsonForm(props.file, formOptions)
+  const [formData, form] = useGithubJsonForm(props.homeFile, formOptions)
   usePlugin(form)
 
   const [globals, globalsForm] = useGithubJsonForm(
-    props.file,
+    props.globalsFile,
     globalFormOptions
   )
   useFormScreenPlugin(globalsForm)
@@ -68,20 +72,35 @@ export const getStaticProps: GetStaticProps = async function ({
   previewData,
 }) {
   if (preview) {
-    return getGithubPreviewProps({
+    const homeFile = await getGithubFile({
       ...previewData,
       fileRelativePath: 'content/globals.json',
       parse: parseJson,
     })
+
+    const globalsFile = await getGithubFile({
+      ...previewData,
+      fileRelativePath: 'content/home.json',
+      parse: parseJson,
+    })
+
+    return {
+      props: {
+        preview,
+        homeFile,
+        globalsFile,
+      },
+    }
   }
   return {
     props: {
-      sourceProvider: null,
-      error: null,
-      preview: false,
-      file: {
+      globalsFile: {
         fileRelativePath: 'content/globals.json',
         data: (await import('../content/globals.json')).default,
+      },
+      homeFile: {
+        fileRelativePath: 'content/home.json',
+        data: (await import('../content/home.json')).default,
       },
     },
   }
