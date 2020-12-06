@@ -25,7 +25,7 @@ export default function Home(props) {
         <InlineImage
           name="hero_image"
           parse={(media) => media.id}
-          uploadDir={() => '/public/images/'}
+          uploadDir={() => '/images'}
           alt="hero-image"
         />
       </InlineForm>
