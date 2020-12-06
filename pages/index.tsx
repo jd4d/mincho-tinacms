@@ -2,13 +2,16 @@ import { getGithubPreviewProps, parseJson } from 'next-tinacms-github'
 import { useGithubJsonForm } from 'react-tinacms-github'
 import { useForm, usePlugin } from 'tinacms'
 import { GetStaticProps } from 'next'
-import { InlineForm, InlineText } from 'react-tinacms-inline'
+import { InlineForm, InlineText, InlineImage } from 'react-tinacms-inline'
 
 export default function Home(props) {
   console.log(props)
   const formOptions = {
     label: 'Home Page',
-    fields: [{ name: 'title', component: 'text' }],
+    fields: [
+      { name: 'title', component: 'text' },
+      { name: 'hero_image', component: 'image' },
+    ],
   }
   const [formDatag, form] = useGithubJsonForm(props.file, formOptions)
   usePlugin(form)
@@ -19,6 +22,12 @@ export default function Home(props) {
         <h1>
           <InlineText name="title" />
         </h1>
+        <InlineImage
+          name="hero_image"
+          parse={(media) => media.id}
+          uploadDir={() => '/public/images/'}
+          alt="hero-image"
+        />
       </InlineForm>
 
       <style jsx global>{`
