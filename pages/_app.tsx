@@ -1,10 +1,7 @@
 import App from 'next/app'
 import { TinaCMS, TinaProvider } from 'tinacms'
-import {
-  GithubClient,
-  GithubMediaStore,
-  TinacmsGithubProvider,
-} from 'react-tinacms-github'
+import { GithubClient, TinacmsGithubProvider } from 'react-tinacms-github'
+import { NextGithubMediaStore } from 'next-tinacms-github'
 
 export default class Site extends App {
   cms: TinaCMS
@@ -34,7 +31,7 @@ export default class Site extends App {
       /**
        * 3. Register the Media Store
        */
-      media: new GithubMediaStore(github),
+      media: new NextGithubMediaStore(github),
       /**
        * 4. Use the Sidebar and Toolbar
        */
