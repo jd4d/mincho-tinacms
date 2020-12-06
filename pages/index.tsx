@@ -1,9 +1,8 @@
 import { getGithubPreviewProps, parseJson } from 'next-tinacms-github'
 import { useGithubJsonForm } from 'react-tinacms-github'
-import { useCMS, useForm, usePlugin } from 'tinacms'
+import { usePlugin, useScreenPlugin } from 'tinacms'
 import { GetStaticProps } from 'next'
 import { InlineForm, InlineText, InlineImage } from 'react-tinacms-inline'
-import styled from 'styled-components'
 
 export default function Home(props) {
   console.log(props)
@@ -14,15 +13,24 @@ export default function Home(props) {
       { name: 'hero_image', component: 'image' },
     ],
   }
-  const [formDatag, form] = useGithubJsonForm(props.file, formOptions)
+  const globalFormOptions = {
+    label: 'Page Globals',
+    fields: [{ name: 'background-color', component: 'text' }],
+  }
+  const [formData, form] = useGithubJsonForm(props.homeFile.file, formOptions)
   usePlugin(form)
-  const cms = useCMS()
+
+  const [globals, globalsForm] = useGithubJsonForm(
+    props.globalsFile.file,
+    globalFormOptions
+  )
+  useScreenPlugin(globalsForm)
 
   return (
-    <div className="container">
+    <div style={{ backgroundColor: globals['background-color'] }}>
       <InlineForm form={form}>
-        <h1>
-          <StyledText name="title" />
+        <h1 style={{ color: 'red' }}>
+          <InlineText name="title" />
         </h1>
         <InlineImage
           name="hero_image"
@@ -49,29 +57,46 @@ export default function Home(props) {
     </div>
   )
 }
-const StyledText = styled(InlineText)`
-  color: green;
-`
 
 export const getStaticProps: GetStaticProps = async function ({
   preview,
   previewData,
 }) {
   if (preview) {
-    return getGithubPreviewProps({
-      ...previewData,
-      fileRelativePath: 'content/home.json',
-      parse: parseJson,
-    })
+    return {
+      props: {
+        homeFile: await getGithubPreviewProps({
+          ...previewData,
+          fileRelativePath: 'content/home.json',
+          parse: parseJson,
+        }),
+        globalsFile: await getGithubPreviewProps({
+          ...previewData,
+          fileRelativePath: 'content/globals.json',
+          parse: parseJson,
+        }),
+      },
+    }
   }
   return {
     props: {
-      sourceProvider: null,
-      error: null,
-      preview: false,
-      file: {
-        fileRelativePath: 'content/home.json',
-        data: (await import('../content/home.json')).default,
+      homeFile: {
+        sourceProvider: null,
+        error: null,
+        preview: false,
+        file: {
+          fileRelativePath: 'content/home.json',
+          data: (await import('../content/home.json')).default,
+        },
+      },
+      contentFile: {
+        sourceProvider: null,
+        error: null,
+        preview: false,
+        file: {
+          fileRelativePath: 'content/globals.json',
+          data: (await import('../content/globals.json')).default,
+        },
       },
     },
   }
