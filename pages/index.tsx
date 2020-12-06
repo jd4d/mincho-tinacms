@@ -10,7 +10,12 @@ export default function Home(props) {
     label: 'Home Page',
     fields: [
       { name: 'title', component: 'text' },
-      { name: 'hero_image', component: 'image' },
+      {
+        name: 'hero_image',
+        component: 'image',
+        parse: (media) => media.id,
+        uploadDir: () => '/images',
+      },
     ],
   }
   const globalFormOptions = {
