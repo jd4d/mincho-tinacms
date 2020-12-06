@@ -1,5 +1,11 @@
 {
   "title": "Ok what's going on with the pizza stuff?",
-  "hero_image": "/images/Screen Shot 2019-07-12 at 5.16.16 PM.png",
-  "background-color": "red"
+  "hero_image": {
+    "id": "/images/hero_image.png",
+    "filename": "hero_image.png",
+    "directory": "/images/",
+    "type": "file",
+    "previewSrc": "https://raw.githubusercontent.com/jd4d/mincho-tinacms/main/public/images/hero_image.png"
+  },
+  "background-color": "#000"
 }
